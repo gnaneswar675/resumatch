@@ -3,7 +3,7 @@ services:
     name: resume_scanner
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn resumescreener.wsgi:resume_scanner
+    startCommand: gunicorn resumescreener.wsgi:application
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: resumescreener.settings
