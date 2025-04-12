@@ -12,12 +12,12 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DB_NAME
-        value: your_database_name
+        value: resume_db
       - key: DB_USER
-        value: your_database_user
+        value: resume_user
       - key: DB_PASSWORD
-        value: your_database_password
+        value: secure_password
       - key: DB_HOST
-        value: your_database_host
+        value: your-database-host
       - key: DB_PORT
         value: 5432
