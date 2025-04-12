@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Screener - Jobs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #6e85f2;
+            --secondary-color: #2b3eab;
+            --accent-color: #738aff;
+            --light-color: #eef2ff; 
+            --dark-color: #1b254f;
+            --text-color: #ffffff;
+            --text-secondary: #e6ebff;
+            --body-bg: #f8faff;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(67, 97, 238, 0.1);
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--primary-color) !important;
+            color: var(--text-color);
+            box-shadow: 0 2px 10px rgba(254, 255, 255, 0.2);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            color: var(--text-color) !important;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar .btn {
+            border-radius: 6px;
+            padding: 8px 18px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        /* User Menu Styling */
+        .user-menu {
+            padding: 20px 0;
+            background-color: var(--light-color);
+            border-bottom: 1px solid rgba(67, 97, 238, 0.1);
+            margin-bottom: 0;
+        }
+
+        .user-menu .user-greeting {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .user-menu a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .user-menu a:hover {
+            color: var(--primary-dark);
+        }
+
+        .user-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.2s ease;
+        }
+
+        .user-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content Styling */
+        .main-content {
+            padding: 40px 0;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.05);
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        .section-heading {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.08);
+            background-color: var(--card-bg);
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.15);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .card-text {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-buttons .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background-color: #243091;
+            border-color: #243091;
+            box-shadow: 0 4px 10px rgba(43, 62, 171, 0.2);
+        }
+
+        .btn-warning {
+            background-color: #e3f2fd;
+            border-color: #e3f2fd;
+            color: #1976d2;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover, .btn-warning:focus {
+            background-color: #bbdefb;
+            border-color: #bbdefb;
+            color: #1976d2;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
+        }
+
+        .btn-danger {
+            background-color: #e3f2fd;
+            border-color: #e3f2fd;
+            color: #1976d2;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover, .btn-danger:focus {
+            background-color: #bbdefb;
+            border-color: #bbdefb;
+            color: #1976d2;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--text-color);
+            padding: 60px 0 30px;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .footer-about {
+            flex: 0 0 100%;
+            max-width: 350px;
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+        }
+
+        .footer-description {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 18px;
+        }
+
+        .social-icon {
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .social-icon:hover {
+            color: var(--text-color);
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-links {
+            flex: 1;
+            min-width: 170px;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .footer-links h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-links h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-links a::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--primary-light);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-color);
+            padding-left: 18px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .navbar .ms-auto {
+                margin-top: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .navbar .ms-auto .btn,
+            .navbar .ms-auto .nav-link {
+                width: 100%;
+                text-align: center;
+                margin: 3px 0;
+            }
+
+            .section-heading {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                margin-bottom: 25px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-links {
+                width: 100%;
+                padding-left: 0;
+                text-align: center;
+            }
+            
+            .footer-links h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-links a {
+                padding-left: 0;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+            
+            .footer-links a:hover {
+                padding-left: 0;
+            }
+            
+            .footer-about {
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 991px) {
+            .footer-content {
+                justify-content: center;
+                gap: 30px;
+            }
+            
+            .footer-links {
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light px-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">ResuMatch</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <div class="ms-auto">
+                    <a href="{% url 'fraud_check' %}" class="btn btn-warning mb-2 mb-lg-0 me-0 me-lg-2">Check Resume Fraud</a>
+                    <a class="btn btn-danger mb-2 mb-lg-0" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="user-menu">
+        <div class="container">
+            {% if user.is_authenticated %}
+                <p class="user-greeting">Welcome, {{ user.username }}</p>
+            {% else %}
+                <p class="user-greeting"><a href="{% url 'login' %}">Login</a> | <a href="{% url 'signup' %}">Signup</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="container">
+                <h2 class="section-heading">Available Jobs</h2>
+                <div class="row">
+                    {% for job in jobs %}
+                    <div class="col-12 col-md-6 col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ job.title }}</h5>
+                                <p class="card-text">{{ job.description }}</p>
+                                <div class="action-buttons">
+                                    <a href="{% url 'apply_job' job.id %}" class="btn btn-success w-100">Apply Job</a>
+                                    <a href="{% url 'scoreboard' job.id %}" class="btn btn-secondary w-100">Scoreboard</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">ResuMatch</div>
+                    <div class="footer-description">
+                        AI-powered resume screening platform that saves time for recruiters and helps candidates find their perfect role.
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><a href="#">Resume Analysis</a></li>
+                        <li><a href="#">Fraud Detection</a></li>
+                        <li><a href="#">Job Recommendations</a></li>
+                        <li><a href="#">Skill Gap Analysis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 ResuMatch. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add this before closing </body> tag -->
+    <style>
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: chatbot-blink 2s infinite;
+        }
+
+        @keyframes chatbot-blink {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Custom chatbase styling to match website theme */
+        .chatbase-bubble {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2) !important;
+        }
+
+        .chatbase-bubble:hover {
+            background-color: var(--primary-dark) !important;
+        }
+    </style>
+
+    <div class="chatbot-container">
+        <script>
+            (function(){
+                if(!window.chatbase||window.chatbase("getState")!=="initialized"){
+                    window.chatbase=(...arguments)=>{
+                        if(!window.chatbase.q){
+                            window.chatbase.q=[]
+                        }
+                        window.chatbase.q.push(arguments)
+                    };
+                    window.chatbase=new Proxy(window.chatbase,{
+                        get(target,prop){
+                            if(prop==="q"){
+                                return target.q
+                            }
+                            return(...args)=>target(prop,...args)
+                        }
+                    })
+                }
+                const onLoad=function(){
+                    const script=document.createElement("script");
+                    script.src="https://www.chatbase.co/embed.min.js";
+                    script.id="9GVuajXE5zZm6707j9Lyf";
+                    script.domain="www.chatbase.co";
+                    document.body.appendChild(script)
+                };
+                if(document.readyState==="complete"){
+                    onLoad()
+                }else{
+                    window.addEventListener("load",onLoad)
+                }
+            })();
+        </script>
+    </div>
+
+    <!-- Keep existing Bootstrap script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResuMatch | AI Resume Screening Platform</title>
+    <style>
+      :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            gap: 8px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        /* Job Selection Section */
+        .job-selection {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .job-cards {
+            display: flex;
+            overflow-x: hidden;
+            gap: 20px;
+            padding: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .job-card {
+            flex: 0 0 auto;
+            width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .job-card-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 26px;
+        }
+
+        .job-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .job-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+
+        .upload-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .upload-text h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .upload-text p {
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .file-types {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .selected-job {
+            margin-bottom: 30px;
+        }
+
+        .selected-job h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .job-selection-dropdown {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: #666;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
+
+        .steps {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 900px;
+            margin: 50px auto 0;
+        }
+
+        .steps::before {
+            content: "";
+            position: absolute;
+            top: 40px;
+            left: 20%;
+            right: 20%;
+            height: 4px;
+            background-color: #ddd;
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 200px;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            text-align: center;
+        }
+
+        .step p {
+            text-align: center;
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .footer-description {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary);
+        }
+
+        .footer-links h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+
+
+        }
+
+        /* Updated Hero Section */
+.hero {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add responsive background elements */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(67, 97, 238, 0.1);
+    z-index: 0;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(76, 201, 240, 0.1);
+    z-index: 0;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 992px) {
+    .hero::before {
+        width: 200px;
+        height: 200px;
+        top: -30px;
+        right: -30px;
+    }
+
+    .hero::after {
+        width: 350px;
+        height: 350px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 0;
+    }
+
+    .hero::before {
+        width: 150px;
+        height: 150px;
+    }
+
+    .hero::after {
+        width: 250px;
+        height: 250px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero::before, .hero::after {
+        opacity: 0.5;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+    }
+}
+
+/* Add subtle animation for the background elements */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+.hero::before {
+    animation: float 15s ease-in-out infinite;
+}
+
+.hero::after {
+    animation: float 20s ease-in-out infinite reverse;
+}
+/* Updated Hero Section with Technical Elements */
+.hero {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Base styles for all decorative elements */
+.hero-decoration {
+    position: absolute;
+    opacity: 0.1;
+    color: var(--primary);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Code brackets background */
+.hero::before {
+    content: "{ }";
+    position: absolute;
+    font-family: monospace;
+    font-size: 180px;
+    top: -40px;
+    right: 10%;
+    opacity: 0.05;
+    color: var(--secondary);
+    transform: rotate(15deg);
+}
+
+/* Circuit board pattern */
+.hero::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background-image: repeating-linear-gradient(90deg,
+        transparent,
+        transparent 15px,
+        rgba(67, 97, 238, 0.1) 15px,
+        rgba(67, 97, 238, 0.1) 20px),
+        repeating-linear-gradient(0deg,
+        transparent,
+        transparent 15px,
+        rgba(67, 97, 238, 0.1) 15px,
+        rgba(67, 97, 238, 0.1) 20px);
+    opacity: 0.5;
+}
+
+/* Tech icons decorations */
+.tech-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.tech-icon {
+    position: absolute;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    opacity: 0.07;
+    color: var(--primary);
+}
+
+/* Specific icons positioning */
+.icon-code {
+    content: "\f121";
+    top: 15%;
+    left: 10%;
+    font-size: 40px;
+}
+
+.icon-laptop {
+    content: "\f109";
+    top: 60%;
+    left: 15%;
+    font-size: 50px;
+}
+
+.icon-book {
+    content: "\f02d";
+    top: 30%;
+    right: 15%;
+    font-size: 45px;
+}
+
+.icon-search {
+    content: "\f002";
+    top: 65%;
+    right: 20%;
+    font-size: 35px;
+}
+
+.icon-file-alt {
+    content: "\f15c";
+    top: 25%;
+    left: 25%;
+    font-size: 30px;
+}
+
+.icon-database {
+    content: "\f1c0";
+    bottom: 20%;
+    right: 30%;
+    font-size: 40px;
+}
+
+.icon-graduation-cap {
+    content: "\f19d";
+    top: 40%;
+    right: 40%;
+    font-size: 35px;
+}
+
+.icon-briefcase {
+    content: "\f0b1";
+    bottom: 30%;
+    left: 35%;
+    font-size: 38px;
+}
+
+/* Binary code background */
+.binary-code {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    opacity: 0.03;
+    font-family: monospace;
+    color: var(--primary);
+    overflow: hidden;
+}
+
+.binary-line {
+    position: absolute;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 992px) {
+    .hero::before {
+        font-size: 140px;
+    }
+
+    .tech-icon {
+        opacity: 0.05;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 60px 0;
+    }
+
+    .hero::before {
+        font-size: 100px;
+        top: -30px;
+    }
+
+    .hero::after {
+        height: 30px;
+    }
+
+    .tech-icon {
+        transform: scale(0.8);
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero::before {
+        font-size: 80px;
+        opacity: 0.03;
+    }
+
+    .tech-icon {
+        opacity: 0.04;
+        transform: scale(0.7);
+    }
+
+    .binary-code {
+        opacity: 0.02;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+}
+
+/* Add subtle animations for the technical elements */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.05; }
+    50% { opacity: 0.08; }
+}
+
+.tech-icon:nth-child(odd) {
+    animation: float 12s ease-in-out infinite;
+}
+
+.tech-icon:nth-child(even) {
+    animation: float 18s ease-in-out infinite reverse;
+}
+
+.binary-line:nth-child(odd) {
+    animation: blink 8s ease-in-out infinite;
+}
+
+.binary-line:nth-child(even) {
+    animation: blink 12s ease-in-out infinite reverse;
+}
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-file-invoice"></i>
+                    ResuMatch
+                </div>
+                <div class="nav-right">
+                    <div class="nav-links">
+                        <a href="#features">Features</a>
+                        <a href="#how-it-works">How It Works</a>
+                        <a href="#about">About</a>
+                    </div>
+                    <div class="auth-buttons">
+                        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                        <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Smart Resume Screening with AI</h1>
+                <p>Our ML-powered platform screens resumes, detects fraud, provides personalized feedback, and recommends better-suited roles - all in seconds.</p>
+                <a href="{% url 'login'%}" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Selection Section -->
+    <section class="job-selection" id="upload">
+        <div class="container">
+            <div class="section-header">
+                <h2>Job Roles</h2>
+                <p>Available positions to match your resume against</p>
+            </div>
+            <div class="job-cards">
+                <div class="job-card">
+                    <div class="job-card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Software Developer Intern</h3>
+                    <p>Perfect for students and junior developers looking to gain experience in software development.</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-card-icon" style="background-color: #4ade80;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Data Analyst</h3>
+                    <p>For analytical minds passionate about turning data into actionable insights.</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-card-icon" style="background-color: #f87171;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>ML Engineer</h3>
+                    <p>For experts in creating machine learning models and AI solutions.</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-card-icon" style="background-color: #f87171;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Frontend Developer</h3>
+                    <p>For developers specializing in building user interfaces and experiences.</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-card-icon" style="background-color: #f87171;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Backend Engineer</h3>
+                    <p>For developers focusing on server-side logic and database management.</p>
+                </div>
+                <!-- Duplicate the job cards for seamless scrolling -->
+                <div class="job-card">
+                    <div class="job-card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>Software Developer Intern</h3>
+                    <p>Perfect for students and junior developers looking to gain experience in software development.</p>
+                </div>
+                <div class="job-card">
+                    <div class="job-card-icon" style="background-color: #4ade80;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Data Analyst</h3>
+                    <p>For analytical minds passionate about turning data into actionable insights.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>AI-Powered Screening Features</h2>
+                <p>Our platform leverages advanced machine learning to provide comprehensive resume analysis</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Eligibility Prediction</h3>
+                    <p>Using TF-IDF and cosine similarity to match your skills with job requirements</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Resume Scoring</h3>
+                    <p>Get a detailed score based on relevant skills, experience, and education</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Fraud Detection</h3>
+                    <p>Advanced algorithms identify suspicious patterns and potential fake content</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Job Recommendations</h3>
+                    <p>Discover better-suited roles based on your existing skills and experience</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Skill Gap Analysis</h3>
+                    <p>Learn exactly what skills you need to develop for your target role</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Course Suggestions</h3>
+                    <p>Get personalized learning recommendations to close skill gaps</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Our platform processes your resume in just a few simple steps</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Select Job</h3>
+                    <p>Choose from our list of available positions</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Upload Resume</h3>
+                    <p>Submit your PDF or DOCX resume file</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>AI Analysis</h3>
+                    <p>Our ML models process your resume instantly</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Get Results</h3>
+                    <p>Receive detailed feedback and recommendations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="features" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why We Built This</h2>
+                <p>Our mission is to make the hiring process fair, efficient, and transparent</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Save Time</h3>
+                    <p>Recruiters spend less time screening, candidates get instant feedback</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3>Reduce Bias</h3>
+                    <p>Focus on skills and qualifications, not subjective factors</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Find Better Matches</h3>
+                    <p>Connect candidates with roles that truly fit their skills</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <div class="footer-logo">ResuMatch</div>
+                    <div class="footer-description">
+                        AI-powered resume screening platform that saves time for recruiters and helps candidates find their perfect role.
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Features</h3>
+                    <ul>
+                        <li><a href="#">Resume Analysis</a></li>
+                        <li><a href="#">Fraud Detection</a></li>
+                        <li><a href="#">Job Recommendations</a></li>
+                        <li><a href="#">Skill Gap Analysis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 ResuMatch. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-scroll job cards continuously to the left
+        const jobCardsContainer = document.querySelector('.job-cards');
+
+        function autoScroll() {
+            jobCardsContainer.scrollLeft += 1; // Adjust the scroll speed here
+
+            // Reset scroll position when reaching the duplicated content
+            if (jobCardsContainer.scrollLeft >= jobCardsContainer.scrollWidth / 2) {
+                jobCardsContainer.scrollLeft = 0;
+            }
+
+            requestAnimationFrame(autoScroll);
+        }
+
+        autoScroll();
+    </script>
+</body>
+</html>

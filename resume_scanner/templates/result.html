@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eligibility Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #6582ff;
+            --primary-dark: #3248c0;
+            --light-bg: #f7f9fc;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(67, 97, 238, 0.12);
+            --text-dark: #2b3044;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .page-header h2 {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            background-color: white;
+            transition: all 0.3s ease;
+            margin-bottom: 1.75rem;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.18);
+        }
+
+        .main-info-card {
+            border-left: 5px solid var(--primary);
+        }
+
+        .badge {
+            font-size: 0.85rem;
+            padding: 0.5em 1em;
+            font-weight: 500;
+            border-radius: 30px;
+        }
+
+        .badge-success {
+            background-color: #10b981;
+        }
+
+        .badge-danger {
+            background-color: #ef4444;
+        }
+
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+            padding: 1rem 1.25rem;
+        }
+
+        .list-group-item:first-child {
+            border-top: none;
+        }
+
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            border-radius: 30px;
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.25);
+        }
+
+        .alert {
+            border-radius: var(--border-radius);
+            animation: fadeIn 0.6s ease-in;
+            box-shadow: var(--box-shadow);
+            border: none;
+        }
+
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #065f46;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .score-display {
+            position: relative;
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 30px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title:before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background-color: var(--primary);
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .job-card {
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+        }
+
+        .job-card:hover {
+            background-color: rgba(67, 97, 238, 0.04);
+        }
+
+        .job-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-match {
+            display: inline-block;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 30px;
+            color: var(--primary);
+            margin-left: 0.5rem;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .resource-link:before {
+            content: "→";
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .applicant-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="text-center page-header">
+        <h2>Application Results</h2>
+        <p>Review your job application status and recommendations</p>
+    </div>
+
+    <div class="card p-4 mb-4 main-info-card">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <h4 class="applicant-name">{{ applicant.name }}</h4>
+            {% if eligible %}
+                <span class="badge badge-success">Eligible</span>
+            {% else %}
+                <span class="badge badge-danger">Not Eligible</span>
+            {% endif %}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <p class="mb-2"><strong>Position Applied:</strong> {{ job.title }}</p>
+                <p><strong>Eligibility Score:</strong> <span class="score-display">{{ score }}%</span></p>
+            </div>
+        </div>
+    </div>
+
+    {% if not eligible %}
+        {% if skill_gaps %}
+            <div class="card p-4 mb-4">
+                <h5 class="section-title">Skill Gaps & Learning Resources</h5>
+                <ul class="list-group">
+                    {% for skill, links in learning_resources.items %}
+                        <li class="list-group-item">
+                            <strong>{{ skill|title }}</strong>
+                            {% if links %}
+                                <div class="mt-2">
+                                    {% for link in links %}
+                                        <a href="{{ link }}" class="resource-link" target="_blank">{{ link }}</a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted mt-1">No resources currently available.</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="card p-4">
+            <h5 class="section-title">Recommended Jobs For You</h5>
+            {% if recommended_jobs %}
+                <ul class="list-group">
+                    {% for rec in recommended_jobs %}
+                        <li class="list-group-item job-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="job-title">
+                                        {{ rec.title }}
+                                        <span class="job-match">{{ rec.score|floatformat:0 }}% match</span>
+                                    </div>
+                                    <p class="mb-1 text-muted">{{ rec.description|truncatechars:150 }}</p>
+                                </div>
+                                <a href="{% url 'apply_job' rec.id %}" class="btn btn-primary">Apply Now</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">No recommendations available at this time.</p>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-success p-4 text-center" role="alert">
+            <div class="mb-2">🎉</div>
+            <h5>Congratulations!</h5>
+            <p class="mb-0">You are eligible for the <strong>{{ job.title }}</strong> position. Our team will contact you shortly with the next steps.</p>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>
