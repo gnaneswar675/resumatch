@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Job, Applicant, FraudCheck
-from .forms import SignupForm, ResumeFraudForm
+from .models import Applicant, FraudCheck
+from .forms import SignupForm, ResumeFraudForm, ApplicantForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.conf import settings
 import os
+from .static_jobs import STATIC_JOBS
 
 # ML utilities
 from .ml.predict_eligibility import extract_text_from_resume, check_eligibility_and_score
@@ -20,85 +21,81 @@ from .ml.improvement_resources import get_learning_resources
 # -------------------------------
 def index(request):
     return render(request, 'index.html')
+
 def job_list(request):
-    jobs = Job.objects.all()
-    return render(request, 'joblist.html', {'jobs': jobs})
+    form = ApplicantForm()
+    return render(request, 'joblist.html', {'form': form, 'jobs': STATIC_JOBS})
 
 # -------------------------------
 # Job Application View
 # -------------------------------
-# views.py (relevant parts updated)
-
-@login_required
 def apply_job(request, job_id):
-    job = get_object_or_404(Job, id=job_id)
+    # Find the job from STATIC_JOBS based on the job_id
+    job = next((job for job in STATIC_JOBS if job['id'] == job_id), None)
+
+    if job is None:
+        return redirect('job_list')  # Redirect to the job list if job is not found
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        resume_file = request.FILES.get('resume')
-
-        if not resume_file:
-            messages.error(request, "Please upload a valid resume.")
-            return redirect(request.path)
-
-        applicant = Applicant.objects.create(
-            job=job,
-            name=name,
-            email=email,
-            resume=resume_file
-        )
-
-        resume_path = applicant.resume.path
-        recommendations = []
-
-        if os.path.exists(resume_path):
-            resume_text = extract_text_from_resume(resume_path)
-            eligible, score = check_eligibility_and_score(resume_text, job.description)
-
-            applicant.resume_text = resume_text
-            applicant.is_eligible = eligible
-            applicant.score = score
-
-            if not eligible:
-                all_jobs = Job.objects.exclude(id=job.id)
-                recommended = recommend_jobs_for_resume(resume_text, all_jobs)
-                applicant.recommendations = [int(job['id']) for job in recommended]
-
-        else:
-            applicant.is_eligible = False
-            applicant.score = 0
-
-        applicant.save()
-        return redirect('result_view', pk=applicant.id)
-
-    return render(request, 'apply_job.html', {'job': job})
-
-
-def scoreboard_view(request, job_id):
-    job = get_object_or_404 (Job, id=job_id)
-    eligible_applicants = Applicant.objects.filter (job=job, is_eligible=True).order_by ('-score')
+        form = ApplicantForm(request.POST, request.FILES)
+        if form.is_valid():
+            applicant = form.save(commit=False)
+            applicant.job_title = job['title']  # Assign the job title to the applicant
+            applicant.save()
+            return redirect('result_view', pk=applicant.id)  # Redirect to the result view for eligibility check
+    else:
+        form = ApplicantForm()
 
     context = {
+        'form': form,
+        'job': job,  # Pass job data to the form
+    }
+    return render(request, 'apply_job.html', context)
+
+# -------------------------------
+# Scoreboard View
+# -------------------------------
+def scoreboard_view(request, job_id):
+    job = next((job for job in STATIC_JOBS if job['id'] == job_id), None)
+    if not job:
+        return render(request, '404.html', status=404)
+
+    # Fetch applicants who are eligible and order them by their score
+    eligible_applicants = Applicant.objects.filter(
+        job_title=job["title"], is_eligible=True
+    ).order_by('-score')
+
+    return render(request, 'scoreboard.html', {
         'job': job,
         'applicants': eligible_applicants
-    }
-    return render (request, 'scoreboard.html', context)
+    })
+
+# -------------------------------
+# Application Result View (Eligibility & Score Calculation)
+# -------------------------------
 def result_view(request, pk):
-    applicant = get_object_or_404 (Applicant, pk=pk)
-    job = get_object_or_404 (Job, id=applicant.job.id)
+    applicant = get_object_or_404(Applicant, pk=pk)
+    job = next((job for job in STATIC_JOBS if job['title'] == applicant.job_title), None)
+
+    if not job:
+        return render(request, '404.html', status=404)
 
     resume_path = applicant.resume.path
-    resume_text = extract_text_from_resume (resume_path)
+    resume_text = extract_text_from_resume(resume_path)
 
-    eligible, score = check_eligibility_and_score (resume_text, job.description)
+    # Check eligibility and score
+    eligible, score = check_eligibility_and_score(resume_text, job["description"])
+    skill_gaps = analyze_skill_gap(resume_text, job["description"])
+    learning_resources = get_learning_resources(skill_gaps)
 
-    skill_gaps = analyze_skill_gap (resume_text, job.description)
-    learning_resources = get_learning_resources (skill_gaps)
+    # Update the applicant with the eligibility and score
+    applicant.is_eligible = eligible
+    applicant.score = score
+    applicant.save()  # Save updated applicant details
 
-    recommended_jobs = recommend_jobs_for_resume (resume_text, Job.objects.exclude (id=job.id))
+    recommended_jobs = recommend_jobs_for_resume(resume_text, STATIC_JOBS)
 
-    context = {
+    return render(request, "result.html", {
         "applicant": applicant,
         "job": job,
         "eligible": eligible,
@@ -106,11 +103,7 @@ def result_view(request, pk):
         "recommended_jobs": recommended_jobs,
         "skill_gaps": skill_gaps,
         "learning_resources": learning_resources,
-    }
-
-    return render (request, "result.html", context)
-
-
+    })
 # -------------------------------
 # Resume Fraud Detection View
 # -------------------------------
@@ -149,7 +142,6 @@ def fraud_check_view(request):
         'result': result,
         'is_checked': is_checked
     })
-
 
 # -------------------------------
 # Signup View
