@@ -463,29 +463,23 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="main-content">
-            <div class="container">
-                <h2 class="section-heading">Available Jobs</h2>
-                <div class="row">
-                    {% for job in jobs %}
-                    <div class="col-12 col-md-6 col-lg-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ job.title }}</h5>
-                                <p class="card-text">{{ job.description }}</p>
-                                <div class="action-buttons">
-                                    <a href="{% url 'apply_job' job.id %}" class="btn btn-success w-100">Apply Job</a>
-                                    <a href="{% url 'scoreboard' job.id %}" class="btn btn-secondary w-100">Scoreboard</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
+    <div class="row">
+    {% for job in jobs %}
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ job.title }}</h5>
+                <p class="card-text">{{ job.description }}</p>
+                <div class="action-buttons">
+                    <a href="{% url 'apply_job' job.id %}" class="btn btn-success w-100">Apply Job</a>
+                    <a href="{% url 'scoreboard' job.id %}" class="btn btn-secondary w-100">Scoreboard</a>
                 </div>
             </div>
         </div>
     </div>
+    {% endfor %}
+</div>
+
 
     <footer>
         <div class="container">
