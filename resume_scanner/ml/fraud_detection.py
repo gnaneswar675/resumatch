@@ -9,12 +9,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 # Lazy load models
 def get_sentence_transformer_model():
     if not hasattr(get_sentence_transformer_model, "_model"):
+
+        get_sentence_transformer_model._model = SentenceTransformer('all-MiniLM-L6-v2')  # Smaller model
         get_sentence_transformer_model._model = SentenceTransformer('all-MiniLM-L6-v2')  # Use a smaller model
     return get_sentence_transformer_model._model
 
 def get_tfidf_vectorizer():
     if not hasattr(get_tfidf_vectorizer, "_vectorizer"):
+        get_tfidf_vectorizer._vectorizer = TfidfVectorizer(max_features=5000)  # Limit features
+
         get_tfidf_vectorizer._vectorizer = TfidfVectorizer(max_features=5000)  # Limit features to reduce memory
+
     return get_tfidf_vectorizer._vectorizer
 
 def extract_text_from_pdf(file):
@@ -22,11 +27,21 @@ def extract_text_from_pdf(file):
     with pdfplumber.open(file) as pdf:
         for page in pdf.pages:
             text += page.extract_text() or ""
+
+            if len(text) > 100000:  # Limit text size
+                break
+    return text.strip()
+
+def extract_text_from_docx(file):
+    text = docx2txt.process(file)
+    return text[:100000]  # Limit text size
+
     return text.strip()  # Clean up memory after processing
 
 def extract_text_from_docx(file):
     text = docx2txt.process(file)
     return text[:100000]  # Limit text size to avoid memory issues
+
 
 
 def preprocess_text(text):
